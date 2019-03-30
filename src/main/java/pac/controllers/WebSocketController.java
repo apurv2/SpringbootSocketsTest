@@ -3,12 +3,12 @@ package pac.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Controller
+@RestController
 public class WebSocketController {
 
     private final SimpMessagingTemplate template;
