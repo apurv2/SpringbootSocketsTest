@@ -1,7 +1,7 @@
-package redis;
+package pac.redis;
 
 
-import redis.model.User;
+import pac.redis.model.User;
 
 import java.util.Map;
 
