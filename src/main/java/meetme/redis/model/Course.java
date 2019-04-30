@@ -1,4 +1,4 @@
-package pac.redis.model;
+package meetme.redis.model;
 
 import java.io.Serializable;
 

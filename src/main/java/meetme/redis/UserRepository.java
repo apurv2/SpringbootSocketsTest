@@ -1,7 +1,7 @@
-package pac.redis;
+package meetme.redis;
 
 
-import pac.redis.model.User;
+import meetme.redis.model.User;
 
 import java.util.Map;
 

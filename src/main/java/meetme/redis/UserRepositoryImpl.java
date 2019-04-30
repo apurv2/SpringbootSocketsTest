@@ -1,9 +1,9 @@
-package pac.redis;
+package meetme.redis;
 
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
-import pac.redis.model.User;
+import meetme.redis.model.User;
 
 import java.util.Map;
 
@@ -14,16 +14,14 @@ public class UserRepositoryImpl implements UserRepository {
 
     private HashOperations hashOperations;
 
-
     public UserRepositoryImpl(RedisTemplate<String, User> redisTemplate) {
         this.redisTemplate = redisTemplate;
-
         hashOperations = redisTemplate.opsForHash();
     }
 
     @Override
     public void save(User user) {
-        hashOperations.put("USER", user.getUserId(), user);
+        hashOperations.put("USER", user.getId(), user);
     }
 
     @Override
