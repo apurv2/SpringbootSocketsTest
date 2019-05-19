@@ -9,10 +9,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(String id) {
-        return userRepository.findByUid(id);
+        return userRepository.findByUserId(id);
     }
 
     @Override

@@ -13,19 +13,19 @@ import java.time.LocalDate;
 public class User {
 
     @Id
-    private String uid;
+    private String userId;
     private String name;
 
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate lastSeen;
 
-    public String getUid() {
-        return uid;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getName() {
