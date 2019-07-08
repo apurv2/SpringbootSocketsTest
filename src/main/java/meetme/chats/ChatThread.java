@@ -12,7 +12,7 @@ public class ChatThread {
     @Id
     String id;
     @Indexed
-    String ThreadId;
+    String threadId;
     String message;
     String senderUserName;
     String receiverUserName;
@@ -29,11 +29,11 @@ public class ChatThread {
     }
 
     public String getThreadId() {
-        return ThreadId;
+        return threadId;
     }
 
     public void setThreadId(String threadId) {
-        ThreadId = threadId;
+        this.threadId = threadId;
     }
 
     public String getMessage() {

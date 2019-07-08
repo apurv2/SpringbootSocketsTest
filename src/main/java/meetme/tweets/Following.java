@@ -1,8 +1,10 @@
 package meetme.tweets;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
+@RedisHash("Following")
 public class Following {
     @Id
     String id;

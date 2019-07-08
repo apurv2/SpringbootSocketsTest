@@ -1,9 +1,11 @@
 package meetme.tweets;
 
+import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
 import java.util.List;
 
+@RedisHash("Tweet")
 public class Tweet {
 
     String id;

@@ -23,6 +23,7 @@ public class UserResource {
 
     @GetMapping("/users")
     public List<User> all() {
+
         return userService.findAll();
     }
 }
