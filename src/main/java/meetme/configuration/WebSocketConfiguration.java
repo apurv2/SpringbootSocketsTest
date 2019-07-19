@@ -39,7 +39,7 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes("/app")
-                .enableSimpleBroker("/chat", "/conversations", "/chatThread","/timeline");
+                .enableSimpleBroker("/chat", "/conversations", "/chatThread", "/timeline");
     }
 
 

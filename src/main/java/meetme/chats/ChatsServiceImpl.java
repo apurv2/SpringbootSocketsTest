@@ -3,6 +3,8 @@ package meetme.chats;
 import meetme.conversations.Conversations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ws.schild.jave.AudioAttributes;
+import ws.schild.jave.VideoAttributes;
 
 import java.util.List;
 
@@ -21,8 +23,6 @@ public class ChatsServiceImpl implements ChatService {
         chatThread.setThreadId(conversations.getThreadId());
         chatThread.setSenderId(conversations.getLoggedInUserId());
         chatThread.setReceiverId(conversations.getOtherUserId());
-
-
         return chatsRepository.save(chatThread);
     }
 
