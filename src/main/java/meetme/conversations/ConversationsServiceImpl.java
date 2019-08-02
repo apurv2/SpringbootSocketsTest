@@ -42,7 +42,7 @@ public class ConversationsServiceImpl implements ConversationsService {
 
     @Override
     public List<Conversations> findConversationById(String loggedInUserId) {
-        return conversationsRepository.findByLoggedInUserId(loggedInUserId);
+        return conversationsRepository.findByOtherUserIdOrLoggedInUserId(loggedInUserId, loggedInUserId);
     }
 
     @Override

@@ -60,15 +60,12 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
     }
 
     @Bean
-    RedisTemplate<String, User> redisTemplate() {
-        final RedisTemplate<String, User> template = new RedisTemplate<String, User>();
+    public RedisTemplate<String, Object> redisTemplate() {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setHashValueSerializer(new GenericToStringSerializer<User>(User.class));
-//        template.setValueSerializer(new GenericToStringSerializer<User>(User.class));
-        template.setValueSerializer(new Jackson2JsonRedisSerializer<User>(User.class));
-
         return template;
     }
+
+
 
 }
