@@ -16,6 +16,7 @@ public class Conversations {
     private String lastMessage;
     private Timestamp timestamp;
     private String otherUserName;
+    @Indexed
     private String otherUserId;
 
 

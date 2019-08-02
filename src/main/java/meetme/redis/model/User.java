@@ -20,6 +20,14 @@ public class User {
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate lastSeen;
 
+
+    private String gender;
+    private String sexualOrientation;
+    private String profileTextDescription;
+
+
+
+
     public String getUserId() {
         return userId;
     }

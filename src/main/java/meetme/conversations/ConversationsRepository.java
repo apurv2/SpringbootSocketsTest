@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ConversationsRepository extends CrudRepository<Conversations, String> {
 
-    List<Conversations> findByLoggedInUserId(String loggedInUserId);
+    List<Conversations> findByOtherUserIdOrLoggedInUserId(String loggedInUserId, String inUserId);
     List<Conversations> findByThreadId(String loggedInUserId);
 
 

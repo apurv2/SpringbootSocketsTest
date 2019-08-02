@@ -31,7 +31,8 @@ public class TimelineServiceImpl implements TimelineService {
     @Override
     public Iterable<Timeline> saveTimeLine(Tweet tweet, String userId) {
         List<Followers> followers = tweetsService.findFollowers(userId);
-        return timelineRepository.save(createTimelineEntries(followers, tweet));
+//        return timelineRepository.save(createTimelineEntries(followers, tweet));
+        return null;
     }
 
     @Override
