@@ -18,22 +18,16 @@ class TimelineServiceImpl : TimelineService {
     private fun createTimelineEntries(followers: List<Followers>, tweet: Tweet) = followers.map { mapTimeline(tweet, it) }
 
     override fun saveTimeLine(tweet: Tweet, userId: String) =
-            timelineRepository!!.save(createTimelineEntries(tweetsService!!.findFollowers(userId), tweet))!!
+            timelineRepository!!.saveAll(createTimelineEntries(tweetsService!!.findFollowers(userId), tweet))!!
 
 
     override fun getTimeline(userId: String) = timelineRepository!!.findByUserId(userId)
 
     private fun mapTimeline(tweet: Tweet, followers: Followers): Timeline {
-        var timeline = Timeline()
-        with(Timeline()) {
+        return Timeline().apply {
             tweetMessage = tweet.tweetMessage
             userId = followers.childUserId
             tweetedUserName = tweet.userName
         }
-        return timeline
     }
 }
-
-//        timeline.tweetMessage = tweet.tweetMessage
-//        timeline.userId = followers.childUserId
-//        timeline.tweetedUserName = tweet.userName

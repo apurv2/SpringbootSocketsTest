@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class AppIwthInjectionConfig {
+public class RedisConfiguration {
 
     @Bean
     public Cloudinary cloudinary() {
