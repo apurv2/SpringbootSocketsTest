@@ -1,7 +1,6 @@
 package meetme.users;
 
 
-import meetme.redis.model.User;
 import meetme.utils.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

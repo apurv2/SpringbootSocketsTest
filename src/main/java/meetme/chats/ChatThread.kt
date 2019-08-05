@@ -17,4 +17,4 @@ data class ChatThread(
         var receiverUserName: String? = null,
         var senderId: String? = null,
         var receiverId: String? = null,
-        var timestamp: Timestamp? = null) : Serializable
+        var timestamp: Long? = null) : Serializable

@@ -1,7 +1,5 @@
 package meetme.users;
 
-import meetme.redis.model.User;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;

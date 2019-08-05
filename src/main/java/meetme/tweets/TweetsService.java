@@ -12,7 +12,7 @@ public interface TweetsService {
 
     List<Followers> findFollowers(String id);
 
-    List<Followers> findAll();
+    List<Tweet> findAll();
 
     Tweet tweet(Tweet tweet);
 }

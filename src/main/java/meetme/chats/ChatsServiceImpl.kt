@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ws.schild.jave.AudioAttributes
 import ws.schild.jave.VideoAttributes
+import java.sql.Timestamp
 
 @Service
 class ChatsServiceImpl : ChatService {
@@ -18,6 +19,7 @@ class ChatsServiceImpl : ChatService {
                 threadId = conversations.threadId
                 senderId = conversations.firstUserId
                 receiverId = conversations.secondUserId
+                timestamp = System.currentTimeMillis()
             }
 
     override fun findAllChats() = chatsRepository!!.findAll() as List<ChatThread>
