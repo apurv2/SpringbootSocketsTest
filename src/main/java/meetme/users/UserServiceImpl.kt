@@ -4,11 +4,11 @@ import com.cloudinary.Cloudinary
 import com.cloudinary.utils.ObjectUtils
 import meetme.interests.UserInterestRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.keyvalue.core.KeyValueTemplate
+import org.springframework.data.redis.core.PartialUpdate
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.IOException
-import org.springframework.data.keyvalue.core.KeyValueTemplate
-import org.springframework.data.redis.core.PartialUpdate
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
@@ -30,15 +30,27 @@ class UserServiceImpl : UserService {
 
     override fun save(user: User) {
         user.lastSeen = System.currentTimeMillis()
-        var dbUser: User? = userRepository.findById(user.userId).get()
-        if (dbUser != null) updateUser(user) else userRepository.save(user)
+        var dbUser: User? = findById(user.userId)
+        if (dbUser != null) {
+            updateUser(user)
+        } else {
+            userRepository.save(user)
+        }
     }
 
-    override fun findById(id: String): User {
+    override fun findById(id: String): User? {
+        val user: List<User> = userRepository.findByUserId(id)
+        return if (user.isNotEmpty()) user[0] else null
+    }
 
-        var user: User = userRepository.findById(id).get()
-        user.profileViews = if (user.profileViews != null) user.profileViews?.inc() else 1
+    fun incrementUserVisit(user: User) {
+        user.profileViews = user.profileViews.inc()
         updateUser(user, "profileViews")
+    }
+
+    override fun findUserByUserId(userId: String): User? {
+        var user: User? = findById(userId)
+        if (user != null) incrementUserVisit(user)
         return user
     }
 
@@ -53,14 +65,13 @@ class UserServiceImpl : UserService {
             .set("interests", userInterest))
 
     override fun findAllUserInterests(userId: String): List<Pair<String, List<UserInterest>>> {
-        var userInterest: List<UserInterest> = userInterestRepository.findAll() as List<UserInterest>
-        var dbUser: User? = userRepository.findById(userId).get()
+        val userInterest: List<UserInterest> = userInterestRepository.findAll() as List<UserInterest>
+        val dbUser: User? = findUserByUserId(userId)
 
-        var kinksMap: Map<String, List<UserInterest>> = dbUser?.interests!!.groupBy { it.code }
-
-        userInterest.filter { kinksMap.containsKey(it.code) }
+        val kinksMap: Map<String, List<UserInterest>> = dbUser?.interests?.groupBy { it.code } ?: emptyMap()
+        userInterest
+                .filter { kinksMap.containsKey(it.code) }
                 .forEach { it.selected = true }
-
         return userInterest.groupBy { it.categoryCd }.toList()
     }
 
@@ -71,10 +82,10 @@ class UserServiceImpl : UserService {
         return kvTemplate.update(partialUpdate)
     }
 
-    private fun getUserKV(user: User?, excludedColumn: String? = null): Map<String, Any?> =
+    fun getUserKV(user: User?, excludedColumn: String? = null): Map<String, Any?> =
             user!!::class.memberProperties
                     .map { it as KProperty1<Any, *> }
                     .filter { it.get(user) != null && "userId" != it.name }
-                    .filter { excludedColumn != null && excludedColumn == it.name }
+                    .filter { excludedColumn?.equals(it.name) ?: true }
                     .map { it.name to it.get(user) }.toMap()
 }

@@ -36,9 +36,9 @@ class UserResource {
 
     @GetMapping("/users/{userId}")
     @CrossOrigin
-    fun findById(@PathVariable("userId") userId: String) = userService.findById(userId)
+    fun findById(@PathVariable("userId") userId: String) = userService.findUserByUserId(userId)
 
-    @PostMapping(value = "/api/files")
+    @PostMapping("/api/files")
     @CrossOrigin
     @Throws(IOException::class, EncoderException::class)
     fun uploadFile(@RequestParam("file") file: MultipartFile) {

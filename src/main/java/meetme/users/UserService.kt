@@ -18,4 +18,5 @@ interface UserService {
 
     fun saveInterest(userInterest: List<UserInterest>, userId: String): PartialUpdate<User>
     fun updateUser(user: User, columnName: String? = null): PartialUpdate<User>
+    fun findUserByUserId(userId: String): User?
 }

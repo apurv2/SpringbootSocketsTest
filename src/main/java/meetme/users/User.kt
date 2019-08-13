@@ -20,7 +20,7 @@ data class User(
         var latitude: Double?,
         var longitude: Double?,
         var city: String?,
-        var freeMsgs: Integer?,
+        var freeMsgs: Int?,
         var birthDay: Long?,
-        var profileViews : Long?) : Serializable
+        var profileViews: Long = 0) : Serializable
 
