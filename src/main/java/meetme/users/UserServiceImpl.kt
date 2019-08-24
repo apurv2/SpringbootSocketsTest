@@ -61,7 +61,7 @@ class UserServiceImpl : UserService {
         return cloudinary.uploader().upload(targetFile, ObjectUtils.asMap("resource_type", "video"))
     }
 
-    override fun saveInterest(userInterest: List<UserInterest>, userId: String): PartialUpdate<User> = kvTemplate.update(PartialUpdate<User>(userId, User::class.java!!)
+    override fun saveInterest(userInterest: List<UserInterest>, userId: String): PartialUpdate<User> = kvTemplate.update(PartialUpdate<User>(userId, User::class.java)
             .set("interests", userInterest))
 
     override fun findAllUserInterests(userId: String): List<Pair<String, List<UserInterest>>> {

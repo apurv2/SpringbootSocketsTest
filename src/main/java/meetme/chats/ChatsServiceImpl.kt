@@ -2,16 +2,19 @@ package meetme.chats
 
 import meetme.conversations.Conversations
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.keyvalue.core.KeyValueTemplate
+import org.springframework.data.redis.core.PartialUpdate
 import org.springframework.stereotype.Service
-import ws.schild.jave.AudioAttributes
-import ws.schild.jave.VideoAttributes
-import java.sql.Timestamp
+import java.time.LocalDateTime
 
 @Service
 class ChatsServiceImpl : ChatService {
 
     @Autowired
-    internal var chatsRepository: ChatsRepository? = null
+    lateinit var chatsRepository: ChatsRepository
+
+    @Autowired
+    lateinit var kvTemplate: KeyValueTemplate
 
     override fun createChatMessage(conversations: Conversations) =
             ChatThread().apply {
@@ -19,14 +22,18 @@ class ChatsServiceImpl : ChatService {
                 threadId = conversations.threadId
                 senderId = conversations.firstUserId
                 receiverId = conversations.secondUserId
-                timestamp = System.currentTimeMillis()
+                timestamp = LocalDateTime.now()
             }
 
-    override fun findAllChats() = chatsRepository!!.findAll() as List<ChatThread>
+    override fun findAllChats() = chatsRepository.findAll() as List<ChatThread>
 
-    override fun findChatsByThreadId(threadId: String) = chatsRepository!!.findByThreadId(threadId)
+    override fun findChatsByThreadId(threadId: String) = chatsRepository.findByThreadIdOrderByTimestampDesc(threadId).sortedBy { it.timestamp }
 
-    override fun saveChatMessage(chatThread: ChatThread) = chatsRepository!!.save(chatThread)
+    override fun saveChatMessage(chatThread: ChatThread) = chatsRepository.save(chatThread)
+
+    override fun setReadReceipt(threadId: String) =
+            kvTemplate.update(PartialUpdate(threadId, Conversations::class.java)
+                    .set("unreadCounter", 0))
 
 }
 

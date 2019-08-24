@@ -15,8 +15,10 @@ data class Conversations(
         @Indexed
         val firstUserId: String? = null,
         @Indexed
-        var secondUserId: String,
-        var firstusername: String? = null,
+        var secondUserId: String? = null,
+        var firstUserName: String? = null,
         var secondUserName: String? = null,
         var lastMessage: String? = null,
-        var timestamp: Timestamp? = null) : Serializable
+        var timestamp: Timestamp? = null,
+        var unreadCounter: Int = 0,
+        var unreadUserId: String? = null) : Serializable

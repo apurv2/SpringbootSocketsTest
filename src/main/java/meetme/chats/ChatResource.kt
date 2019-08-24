@@ -11,37 +11,41 @@ import org.springframework.web.bind.annotation.*
 class ChatResource {
 
     @Autowired
-    internal var conversationsService: ConversationsService? = null
+    lateinit var conversationsService: ConversationsService
 
     @Autowired
-    internal var chatService: ChatService? = null
+    lateinit var chatService: ChatService
 
     val allConversations: List<Conversations>
-        @GetMapping("/conversations/all")
+        @GetMapping("/conversations")
         @CrossOrigin
-        get() = conversationsService!!.findAllConversations()
+        get() = conversationsService.findAllConversations()
 
     val allChats: List<ChatThread>
         @GetMapping("/chats/all")
         @CrossOrigin
-        get() = chatService!!.findAllChats()
+        get() = chatService.findAllChats()
 
     @PostMapping("/conversations")
     @CrossOrigin
-    fun createOrUpdateChat(@RequestBody conversations: Conversations) = conversationsService!!.createChatMessage(conversations)
+    fun createOrUpdateChat(@RequestBody conversations: Conversations) = conversationsService.createChatMessage(conversations)
 
     @MessageMapping("/send/message")
-    fun onReceivedMesage(@Payload conversations: Conversations) = conversationsService!!.createChatMessage(conversations)
+    fun onReceivedMesage(@Payload conversations: Conversations) = conversationsService.createChatMessage(conversations)
 
 
     @GetMapping("/conversations/{userId}")
     @CrossOrigin
-    fun getUserConversations(@PathVariable userId: String) = conversationsService!!.findConversationById(userId)
+    fun getUserConversations(@PathVariable userId: String) = conversationsService.findConversationById(userId)
 
 
     @GetMapping("/chats/{threadId}")
     @CrossOrigin
-    fun findChatsByThreadId(@PathVariable threadId: String) = chatService!!.findChatsByThreadId(threadId)
+    fun findChatsByThreadId(@PathVariable threadId: String) = chatService.findChatsByThreadId(threadId)
 
+
+    @PutMapping("/chats/read/{threadId}")
+    @CrossOrigin
+    fun setMessageAsRead(@PathVariable threadId: String) = chatService.setReadReceipt(threadId)
 
 }

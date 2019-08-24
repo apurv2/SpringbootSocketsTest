@@ -5,6 +5,9 @@ import org.springframework.data.redis.core.RedisHash
 import org.springframework.data.redis.core.index.Indexed
 import java.io.Serializable
 import java.sql.Timestamp
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.*
 
 @RedisHash("ChatThread")
 data class ChatThread(
@@ -17,4 +20,5 @@ data class ChatThread(
         var receiverUserName: String? = null,
         var senderId: String? = null,
         var receiverId: String? = null,
-        var timestamp: Long? = null) : Serializable
+        @Indexed
+        var timestamp: LocalDateTime? = null) : Serializable
