@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.PartialUpdate
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.IOException
+import java.time.LocalDateTime
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
@@ -29,13 +30,10 @@ class UserServiceImpl : UserService {
     internal lateinit var cloudinary: Cloudinary
 
     override fun save(user: User) {
-        user.lastSeen = System.currentTimeMillis()
-        var dbUser: User? = findById(user.userId)
-        if (dbUser != null) {
-            updateUser(user)
-        } else {
-            userRepository.save(user)
-        }
+        user.lastSeen = LocalDateTime.now()
+        val dbUser: User? = findById(user.userId)
+        if (dbUser != null) updateUser(user) else userRepository.save(user)
+
     }
 
     override fun findById(id: String): User? {
@@ -85,7 +83,7 @@ class UserServiceImpl : UserService {
     fun getUserKV(user: User?, excludedColumn: String? = null): Map<String, Any?> =
             user!!::class.memberProperties
                     .map { it as KProperty1<Any, *> }
-                    .filter { it.get(user) != null && "userId" != it.name }
+                    .filter { it.get(user) != null && "userId" != it.name && ("profileViews" != it.name || it.get(user) != 0L) }
                     .filter { excludedColumn?.equals(it.name) ?: true }
                     .map { it.name to it.get(user) }.toMap()
 }

@@ -32,7 +32,7 @@ class UserResource {
 
     @GetMapping("/users")
     @CrossOrigin
-    fun all(): List<User> = userService.findAll()
+    fun all() = userService.findAll()
 
     @GetMapping("/users/{userId}")
     @CrossOrigin
