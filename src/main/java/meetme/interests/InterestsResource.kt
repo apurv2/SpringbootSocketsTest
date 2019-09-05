@@ -14,7 +14,6 @@ class InterestsResource {
     @CrossOrigin
     fun addInterest(@RequestBody userInterest: UserInterest): UserInterest = userInterestsService!!.saveInterest(userInterest)
 
-
     @GetMapping("/interests")
     @CrossOrigin
     fun getInterests(): List<Pair<String, List<UserInterest>>> = userInterestsService!!.findAllInterests()

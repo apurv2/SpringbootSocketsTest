@@ -43,7 +43,9 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
-        return new JedisConnectionFactory();
+        JedisConnectionFactory abc =  new JedisConnectionFactory();
+        abc.setHostName("127.0.0.1");
+        return abc;
     }
 
     @Bean
