@@ -1,6 +1,6 @@
 package meetme.users
 
-import com.google.gson.Gson
+import org.apache.commons.beanutils.PropertyUtils
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -57,6 +57,49 @@ class UserServiceImplTest {
         user1.profileViews = 0
         Assert.assertEquals(userServiceImpl.getUserKV(user1).size, user1::class.memberProperties.size - 2)
         user1.profileViews = 12
+    }
+
+
+    @Test
+    fun itShouldCopyNonNullValues() {
+
+        var user2: User = User(
+                userId = "CTiWEknLbHdK7NBrZSsXiVviVLU2",
+                lastSeen = LocalDateTime.now(),
+                name = "user2",
+                gender = "m",
+                sexualOrientation = "straight",
+                interests = emptyList(),
+                userName = "appugadu",
+                profileTextDescription = "hello",
+                latitude = 28.7588833,
+                longitude = -81.3178446,
+                city = "Lake Mary",
+                freeMsgs = 6,
+                birthday = LocalDate.now(),
+                profileViews = 26,
+                feet = 5,
+                inches = 6,
+                bodyType = "athletic",
+                ethnicity = "asian",
+                verified = true,
+                weight = 170)
+
+        PropertyUtils.describe(user2)
+                .filter { it.value != null && it.key != "name" }
+//                .filter({ e -> !e.getKey().equals("class") })
+                .forEach {
+                    try {
+                        PropertyUtils.setProperty(user1, it.key.toString(), it.value)
+                    } catch (e: Exception) {
+                        // Error setting property ...;
+                    }
+                }
+
+        println("""user1==${user1.weight} & name ===${user1.name}""")
+        print("""user2==${user2.weight}& name ===${user2.name}""")
+
+
     }
 
     @Test

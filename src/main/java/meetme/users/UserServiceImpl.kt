@@ -10,16 +10,11 @@ import org.springframework.data.redis.core.PartialUpdate
 import org.springframework.data.redis.core.mapping.RedisMappingContext
 import org.springframework.data.redis.repository.core.MappingRedisEntityInformation
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
 import java.io.File
 import java.io.IOException
 import java.time.LocalDateTime
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
-import org.springframework.http.ResponseEntity
-import meetme.users.UserServiceImpl
-
-
 
 
 @Service

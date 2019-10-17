@@ -23,5 +23,9 @@ class ReferenceTableResource {
     @CrossOrigin
     fun findAll() = referenceTableService.findAll()
 
+    @GetMapping("/hello")
+    @CrossOrigin
+    fun hello() = "hello"
+
 }
 

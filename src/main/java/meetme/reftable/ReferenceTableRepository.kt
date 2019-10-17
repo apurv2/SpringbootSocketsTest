@@ -4,7 +4,7 @@ import meetme.chats.ChatThread
 import org.springframework.data.repository.CrudRepository
 
 interface ReferenceTableRepository : CrudRepository<ReferenceTable, String> {
-    fun findByRefTableId(refTableId : String) : List<ReferenceTable>
+    fun findByRefTableIdOrRefTableId(refTableId : String, refTableId2 : String) : List<ReferenceTable>
 }
 
 
