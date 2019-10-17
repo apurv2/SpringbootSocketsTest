@@ -1,5 +1,6 @@
 package meetme.configuration;
 
+import com.cloudinary.Cloudinary;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -12,10 +13,23 @@ import org.springframework.web.socket.config.annotation.AbstractWebSocketMessage
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfigurer {
+
+    @Bean
+    public Cloudinary cloudinary() {
+        Map config = new HashMap();
+        config.put("cloud_name", "duf1ntj7z");
+        config.put("api_key", "647816789382186");
+        config.put("api_secret", "5R3U1Oc9zwvnPOfI-TtlIeI0u_E");
+        return new Cloudinary(config);
+    }
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/socket")
@@ -45,6 +59,7 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
     JedisConnectionFactory jedisConnectionFactory() {
         JedisConnectionFactory abc =  new JedisConnectionFactory();
         abc.setHostName("127.0.0.1");
+        abc.setPort(6479);
         return abc;
     }
 

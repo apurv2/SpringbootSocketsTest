@@ -2,6 +2,7 @@ package meetme.users
 
 
 import meetme.utils.FileService
+import org.apache.http.HttpRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -10,6 +11,7 @@ import ws.schild.jave.EncoderException
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.atomic.AtomicLong
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 class UserResource {
@@ -27,12 +29,12 @@ class UserResource {
     @CrossOrigin
     fun createOrUpdateUser(@RequestBody user: User): User? {
         userService.save(user)
-        return userService.findById(user.userId)
+        return userService.findById(user.userId!!)
     }
 
     @GetMapping("/users")
     @CrossOrigin
-    fun all() = userService.findAll()
+    fun getAllUsers() = userService.findAll()
 
     @GetMapping("/users/{userId}")
     @CrossOrigin

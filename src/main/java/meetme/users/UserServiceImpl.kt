@@ -4,14 +4,22 @@ import com.cloudinary.Cloudinary
 import com.cloudinary.utils.ObjectUtils
 import meetme.interests.UserInterestRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Sort
 import org.springframework.data.keyvalue.core.KeyValueTemplate
 import org.springframework.data.redis.core.PartialUpdate
+import org.springframework.data.redis.core.mapping.RedisMappingContext
+import org.springframework.data.redis.repository.core.MappingRedisEntityInformation
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestTemplate
 import java.io.File
 import java.io.IOException
 import java.time.LocalDateTime
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
+import org.springframework.http.ResponseEntity
+import meetme.users.UserServiceImpl
+
+
 
 
 @Service
@@ -29,9 +37,14 @@ class UserServiceImpl : UserService {
     @Autowired
     internal lateinit var cloudinary: Cloudinary
 
+    var mappingContext = RedisMappingContext()
+
+
     override fun save(user: User) {
+
+
         user.lastSeen = LocalDateTime.now()
-        val dbUser: User? = findById(user.userId)
+        val dbUser: User? = findById(user.userId!!)
         if (dbUser != null) updateUser(user) else userRepository.save(user)
 
     }
@@ -52,35 +65,52 @@ class UserServiceImpl : UserService {
         return user
     }
 
-    override fun findAll(): List<User> = userRepository.findAll() as List<User>
-
-    @Throws(IOException::class)
-    override fun uploadToCloudinary(targetFile: File): Map<*, *> {
-        return cloudinary.uploader().upload(targetFile, ObjectUtils.asMap("resource_type", "video"))
+    private fun <T> getEntityInformation(entityClass: Class<T>)
+            :
+            MappingRedisEntityInformation<out Any, T> {
+        return MappingRedisEntityInformation(mappingContext.getRequiredPersistentEntity(entityClass))
     }
 
-    override fun saveInterest(userInterest: List<UserInterest>, userId: String): PartialUpdate<User> = kvTemplate.update(PartialUpdate<User>(userId, User::class.java)
-            .set("interests", userInterest))
+    override fun findAll(): List<User> {
+
+//        var query: KeyValueQuery<User> = KeyValueQuery<User>()
+//        query.sort = Sort(Sort.Direction.DESC, "freeMsgs")
+//        return kvTemplate.find(query, User::class.java) as List<User>
+
+        return userRepository.findAll(Sort.by("freeMsgs").descending()) as List<User>
+//        return userRepository.findFirst10ByFreeMsgs()
+    }
+
+    @Throws(IOException::class)
+    override fun uploadToCloudinary(targetFile: File) = cloudinary
+            .uploader()
+            .upload(targetFile, ObjectUtils.asMap("resource_type", "video"))
+
+    override fun saveInterest(userInterest: List<UserInterest>, userId: String): PartialUpdate<User> =
+            kvTemplate
+                    .update(PartialUpdate<User>(userId, User::class.java)
+                            .set("interests", userInterest))
 
     override fun findAllUserInterests(userId: String): List<Pair<String, List<UserInterest>>> {
-        val userInterest: List<UserInterest> = userInterestRepository.findAll() as List<UserInterest>
-        val dbUser: User? = findUserByUserId(userId)
+        val kinksMap = findUserByUserId(userId)?.interests?.groupBy { it.code }
+                ?: emptyMap()
 
-        val kinksMap: Map<String, List<UserInterest>> = dbUser?.interests?.groupBy { it.code } ?: emptyMap()
-        userInterest
+        return userInterestRepository
+                .findAll()
                 .filter { kinksMap.containsKey(it.code) }
-                .forEach { it.selected = true }
-        return userInterest.groupBy { it.categoryCd }.toList()
+                .onEach { it.selected = true }
+                .groupBy { it.categoryCd }
+                .toList()
     }
 
     override fun updateUser(user: User, columnName: String?): PartialUpdate<User> {
 
-        var partialUpdate: PartialUpdate<User> = PartialUpdate(user.userId, User::class.java)
+        var partialUpdate: PartialUpdate<User> = PartialUpdate(user.userId!!, User::class.java)
         getUserKV(user, columnName).forEach { partialUpdate = partialUpdate.set(it.key, it.value!!) }
         return kvTemplate.update(partialUpdate)
     }
 
-    fun getUserKV(user: User?, excludedColumn: String? = null): Map<String, Any?> =
+    fun getUserKV(user: User?, excludedColumn: String? = null) =
             user!!::class.memberProperties
                     .map { it as KProperty1<Any, *> }
                     .filter { it.get(user) != null && "userId" != it.name && ("profileViews" != it.name || it.get(user) != 0L) }
